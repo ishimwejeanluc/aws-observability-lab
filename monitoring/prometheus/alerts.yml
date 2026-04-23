@@ -1,0 +1,19 @@
+groups:
+  - name: web-app-alerts
+    interval: 30s
+    rules:
+      - alert: HighErrorRate
+        expr: |
+          (
+            sum(rate(http_errors_total[5m]))
+            /
+            clamp_min(sum(rate(http_requests_total[5m])), 1e-9)
+          ) * 100 > 5
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected (>5%)"
+          description: |
+            Error rate is {{ $value | printf "%.2f" }}% over the last 5m.
+            Investigate recent deployments or upstream dependencies.
