@@ -57,16 +57,7 @@ pipeline {
             }
         }
 
-        stage('Install & Build') {
-            agent {
-                docker {
-                    image 'python:3.11'
-                }
-            }
-            steps {
-                sh 'pip install -r web/requirements.txt'
-            }
-        }
+       
 
         stage('Docker Build & Push') {
             steps {
