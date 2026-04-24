@@ -66,7 +66,7 @@ pipeline {
         stage('Push to Registry') {
             steps {
                 echo 'Pushing the docker image...'
-                sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin'
                 sh 'docker push $DOCKER_IMAGE:latest'
             }
         }
