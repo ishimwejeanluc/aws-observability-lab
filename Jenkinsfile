@@ -16,13 +16,17 @@ pipeline {
         stage('Load .env') {
             steps {
                 withCredentials([file(credentialsId: 'app_env_file', variable: 'APP_ENV_FILE')]) {
-                    sh 'cp "$APP_ENV_FILE" .env && chmod 600 .env'
+                    sh '''
+                        cp "$APP_ENV_FILE" .env
+                        chmod 600 .env
+                    '''
 
                     script {
                         def props = readProperties file: '.env'
 
                         def requiredKeys = [
                             'DOCKER_HUB_USER',
+                            'DOCKER_HUB_PASSWORD',
                             'DOCKER_HUB_REPO',
                             'EC2_PUBLIC_IP',
                             'DB_HOST',
@@ -43,8 +47,10 @@ pipeline {
                             env."${key}" = value?.toString()?.trim()
                         }
 
+                        // Standardized Docker credentials
                         env.DOCKER_USERNAME = env.DOCKER_HUB_USER
                         env.DOCKER_PASSWORD = env.DOCKER_HUB_PASSWORD
+
                         env.DOCKER_IMAGE = "${env.DOCKER_USERNAME}/${env.DOCKER_HUB_REPO}"
                     }
                 }
@@ -60,16 +66,18 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                echo 'Building the docker image...'
-                sh 'docker build -t $DOCKER_IMAGE:latest -f web/Dockerfile web'
+                echo 'Building Docker image...'
+                sh 'docker build -t $DOCKER_IMAGE:$IMAGE_TAG -f web/Dockerfile web'
             }
         }
 
         stage('Push to Registry') {
             steps {
-                echo 'Pushing the docker image...'
-                sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
-                sh 'docker push $DOCKER_IMAGE:latest'
+                echo 'Pushing Docker image...'
+                sh '''
+                    echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+                    docker push $DOCKER_IMAGE:$IMAGE_TAG
+                '''
             }
         }
 
@@ -89,6 +97,8 @@ pipeline {
                         --private-key "$ANSIBLE_SSH_KEY" \
                         ansible/main.yml \
                         -e "web_image=${DOCKER_IMAGE}:${IMAGE_TAG}" \
+                        -e "docker_username=$DOCKER_USERNAME" \
+                        -e "docker_password=$DOCKER_PASSWORD" \
                         -e "db_host=$DB_HOST" \
                         -e "db_port=$DB_PORT" \
                         -e "db_name=$DB_NAME" \
