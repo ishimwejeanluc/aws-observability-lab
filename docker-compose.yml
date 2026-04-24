@@ -40,7 +40,7 @@ services:
         awslogs-stream: web-app
       
 
-prometheus:
+  prometheus:
     image: prom/prometheus:v2.53.0
     command:
       - --config.file=/etc/prometheus/prometheus.yml
@@ -55,7 +55,7 @@ prometheus:
       - web
       - node-exporter
 
-node-exporter:
+  node-exporter:
     image: prom/node-exporter:v1.8.2
     ports:
       - "9100:9100"
@@ -65,7 +65,7 @@ node-exporter:
     volumes:
       - /:/host:ro,rslave
 
-grafana:
+  grafana:
     image: grafana/grafana:11.1.0
     ports:
       - "3000:3000"
@@ -95,3 +95,4 @@ volumes:
   db_data:
   prometheus_data:
   grafana_data:
+ 

@@ -31,8 +31,7 @@ pipeline {
                             'DB_USER',
                             'DB_PASSWORD',
                             'GF_ADMIN_USER',
-                            'GF_ADMIN_PASSWORD',
-                            
+                            'GF_ADMIN_PASSWORD'
                         ]
 
                         def missingKeys = requiredKeys.findAll { key -> !props[key]?.trim() }
@@ -57,22 +56,18 @@ pipeline {
             }
         }
 
-       
-
-        stage('Docker Build & Push') {
+        stage('Docker Build') {
             steps {
-                script {
-                    def imageName = "${DOCKER_IMAGE}"
+                echo 'Building the docker image...'
+                sh 'docker build -t $DOCKER_IMAGE:latest -f web/Dockerfile web'
+            }
+        }
 
-                   
-                    def appImage = docker.build("${imageName}:${IMAGE_TAG}", "-f web/Dockerfile web")
-
-                    
-                    docker.withRegistry('https://index.docker.io/v1/', 'docker-hub-credentials-id') {
-                        appImage.push("${IMAGE_TAG}")
-                        appImage.push("latest") 
-                    }
-                }
+        stage('Push to Registry') {
+            steps {
+                echo 'Pushing the docker image...'
+                sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
+                sh 'docker push $DOCKER_IMAGE:latest'
             }
         }
 
@@ -98,8 +93,7 @@ pipeline {
                         -e "db_user=$DB_USER" \
                         -e "db_password=$DB_PASSWORD" \
                         -e "gf_admin_user=$GF_ADMIN_USER" \
-                        -e "gf_admin_password=$GF_ADMIN_PASSWORD" \
-                    
+                        -e "gf_admin_password=$GF_ADMIN_PASSWORD"
                     '''
                 }
             }
