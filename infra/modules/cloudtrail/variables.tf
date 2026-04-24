@@ -1,6 +1,7 @@
 variable "bucket_name" {
   description = "Globally unique S3 bucket name for CloudTrail logs"
   type        = string
+  default     = "web-app-cloudtrail-logs"
 }
 
 variable "account_id" {

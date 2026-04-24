@@ -1,13 +1,13 @@
 variable "aws_region" {
   description = "The AWS region to deploy the infrastructure in."
   type        = string
-  default     = "us-west-1"
+  default     = "eu-west-1"
 }
 
 variable "instance_type" {
   description = "The type of EC2 instance to launch."
   type        = string
-  default     = "t2.micro"
+  default     = "t3.medium"
 }
 
 variable "project_name" {
@@ -27,4 +27,9 @@ variable "key_name" {
   type        = string
   default     = "devops-lab"
 
+}
+variable "cloudtrail_bucket_name" {
+  description = "Name of the S3 bucket for CloudTrail logs"
+  type        = string
+  default = "web-app-cloudtrail-logs"
 }

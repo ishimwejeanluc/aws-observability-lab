@@ -4,7 +4,7 @@ terraform {
   backend "s3" {
     bucket         = "devops-lab-123456"
     key            = "terraform.tfstate"
-    region         = "us-west-1"
+    region         = "eu-west-1"
     dynamodb_table = "devops-lab-locks-123456"
     encrypt        = true
   }
@@ -28,6 +28,8 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
+
+data "aws_caller_identity" "current" {}
 
 locals {
   ssh_user         = "ec2-user"
@@ -60,4 +62,16 @@ module "web_server" {
   tags = {
     Name = "${var.project_name}-web"
   }
+}
+
+# --- CloudTrail Module ---
+module "cloudtrail" {
+  source      = "./modules/cloudtrail"
+  bucket_name = var.cloudtrail_bucket_name
+  account_id  = data.aws_caller_identity.current.account_id
+}
+
+# --- GuardDuty Module ---
+module "guardduty" {
+  source = "./modules/guardduty"
 }

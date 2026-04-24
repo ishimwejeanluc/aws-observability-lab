@@ -1,7 +1,7 @@
 variable "aws_region" {
   description = "AWS region for backend bootstrap resources"
   type        = string
-  default     = "us-west-1"
+  default     = "eu-west-1"
 }
 
 variable "s3_bucket_name" {
