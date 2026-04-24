@@ -43,7 +43,9 @@ pipeline {
                             env."${key}" = value?.toString()?.trim()
                         }
 
-                        env.DOCKER_IMAGE = "${env.DOCKER_HUB_USER}/${env.DOCKER_HUB_REPO}"
+                        env.DOCKER_USERNAME = env.DOCKER_HUB_USER
+                        env.DOCKER_PASSWORD = env.DOCKER_HUB_PASSWORD
+                        env.DOCKER_IMAGE = "${env.DOCKER_USERNAME}/${env.DOCKER_HUB_REPO}"
                     }
                 }
             }
@@ -66,7 +68,7 @@ pipeline {
         stage('Push to Registry') {
             steps {
                 echo 'Pushing the docker image...'
-                sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USER" --password-stdin'
+                sh 'echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin'
                 sh 'docker push $DOCKER_IMAGE:latest'
             }
         }
