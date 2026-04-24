@@ -67,7 +67,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t $DOCKER_IMAGE:$IMAGE_TAG -f web/Dockerfile web'
+                sh "docker build -t ${env.DOCKER_IMAGE}:${env.IMAGE_TAG} -f web/Dockerfile web"
             }
         }
 
@@ -90,23 +90,23 @@ pipeline {
                         usernameVariable: 'ANSIBLE_SSH_USER'
                     )
                 ]) {
-                    sh '''
+                    sh """
                     ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook \
-                        -i "$EC2_PUBLIC_IP," \
-                        -u "$ANSIBLE_SSH_USER" \
-                        --private-key "$ANSIBLE_SSH_KEY" \
+                        -i "${env.EC2_PUBLIC_IP}," \
+                        -u "${env.ANSIBLE_SSH_USER}" \
+                        --private-key "${ANSIBLE_SSH_KEY}" \
                         ansible/main.yml \
-                        -e "web_image=${DOCKER_IMAGE}:${IMAGE_TAG}" \
-                        -e "docker_username=$DOCKER_USERNAME" \
-                        -e "docker_password=$DOCKER_PASSWORD" \
-                        -e "db_host=$DB_HOST" \
-                        -e "db_port=$DB_PORT" \
-                        -e "db_name=$DB_NAME" \
-                        -e "db_user=$DB_USER" \
-                        -e "db_password=$DB_PASSWORD" \
-                        -e "gf_admin_user=$GF_ADMIN_USER" \
-                        -e "gf_admin_password=$GF_ADMIN_PASSWORD"
-                    '''
+                        -e "web_image=${env.DOCKER_IMAGE}:${env.IMAGE_TAG}" \
+                        -e "docker_username=${env.DOCKER_USERNAME}" \
+                        -e "docker_password=${env.DOCKER_PASSWORD}" \
+                        -e "db_host=${env.DB_HOST}" \
+                        -e "db_port=${env.DB_PORT}" \
+                        -e "db_name=${env.DB_NAME}" \
+                        -e "db_user=${env.DB_USER}" \
+                        -e "db_password=${env.DB_PASSWORD}" \
+                        -e "gf_admin_user=${env.GF_ADMIN_USER}" \
+                        -e "gf_admin_password=${env.GF_ADMIN_PASSWORD}"
+                    """
                 }
             }
         }
