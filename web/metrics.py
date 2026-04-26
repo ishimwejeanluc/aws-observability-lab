@@ -14,6 +14,12 @@ HTTP_REQUEST_DURATION_SECONDS = Histogram(
     ['method', 'endpoint']
 )
 
+HTTP_ERRORS_TOTAL = Counter(
+    'http_errors_total',
+    'Total number of HTTP error requests (4xx and 5xx)',
+    ['method', 'endpoint', 'status_code']
+)
+
 def metrics_endpoint():
     """
     Returns the metrics in Prometheus format.

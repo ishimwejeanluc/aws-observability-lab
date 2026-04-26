@@ -1,7 +1,7 @@
 import time
 import logging
 from flask import request, g
-from metrics import HTTP_REQUESTS_TOTAL, HTTP_REQUEST_DURATION_SECONDS
+from metrics import HTTP_REQUESTS_TOTAL, HTTP_REQUEST_DURATION_SECONDS, HTTP_ERRORS_TOTAL
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,6 @@ def record_metrics(response):
     latency = time.time() - g.start_time
     
     # Get request details
-    # Using request.endpoint or request.path. Endpoint is better for metrics (less cardinality).
     endpoint = request.endpoint or "unknown"
     method = request.method
     status_code = response.status_code
@@ -24,6 +23,14 @@ def record_metrics(response):
         endpoint=endpoint, 
         status_code=status_code
     ).inc()
+    
+    # Increment error counter if status is 4xx or 5xx
+    if status_code >= 400:
+        HTTP_ERRORS_TOTAL.labels(
+            method=method,
+            endpoint=endpoint,
+            status_code=status_code
+        ).inc()
     
     HTTP_REQUEST_DURATION_SECONDS.labels(
         method=method, 

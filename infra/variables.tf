@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "instance_type" {
   description = "The type of EC2 instance to launch."
   type        = string
-  default     = "t3.medium"
+  default     = "t3.large"
 }
 
 variable "project_name" {
