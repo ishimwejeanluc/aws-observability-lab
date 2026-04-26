@@ -1,6 +1,7 @@
 import time
 import logging
 from flask import request, g
+from werkzeug.exceptions import HTTPException
 from metrics import HTTP_REQUESTS_TOTAL, HTTP_REQUEST_DURATION_SECONDS, HTTP_ERRORS_TOTAL
 
 logger = logging.getLogger(__name__)
@@ -60,8 +61,12 @@ def setup_observability(app):
     app.before_request(start_timer)
     app.after_request(record_metrics)
     
+    
+
     @app.errorhandler(Exception)
     def handle_exception(e):
+        if isinstance(e, HTTPException):
+            return e
         # Log the exception with stack trace
         logger.exception(f"Unhandled Exception: {str(e)}", extra={
             "method": request.method,
