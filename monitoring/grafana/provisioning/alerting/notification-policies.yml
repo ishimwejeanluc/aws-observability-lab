@@ -1,0 +1,13 @@
+apiVersion: 1
+policies:
+  - orgId: 1
+    receiver: Email-LJeanLuc
+    group_by: ['alertname']
+    matchers:
+      - severity=warning
+    continue: false
+    routes:
+      - receiver: Email-LJeanLuc
+        matchers:
+          - severity=warning
+        continue: false
