@@ -1,9 +1,0 @@
-apiVersion: 1
-contactPoints:
-  - orgId: 1
-    name: Email-LJeanLuc
-    receivers:
-      - uid: email-ljeanluc
-        type: email
-        settings:
-          addresses: lukatoni442@gmail.com
