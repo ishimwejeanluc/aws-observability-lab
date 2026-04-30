@@ -13,7 +13,7 @@ variable "instance_type" {
 variable "project_name" {
   description = "Project name used for naming cloud resources"
   type        = string
-  default     = "webapp"
+  default     = "webapp-monitoring"
 }
 
 variable "allowed_ssh_cidr" {
@@ -25,11 +25,11 @@ variable "allowed_ssh_cidr" {
 variable "key_name" {
   description = "The name of the EC2 key pair to use for SSH access."
   type        = string
-  default     = "devops-lab"
+  default     = "devops-lab-monitoring-key"
 
 }
 variable "cloudtrail_bucket_name" {
   description = "Name of the S3 bucket for CloudTrail logs"
   type        = string
-  default = "web-app-cloudtrail-logs"
+  default = "web-app-monitoring-cloudtrail-logs"
 }

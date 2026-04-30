@@ -36,8 +36,8 @@ services:
       driver: awslogs
       options:
         awslogs-region: "eu-west-1"
-        awslogs-group: "/docker/web-app"
-        awslogs-stream: web-app
+        awslogs-group: "/docker/web-app-monitoring"
+        awslogs-stream: web-app-monitoring
       
 
   prometheus:

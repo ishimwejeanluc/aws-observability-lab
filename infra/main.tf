@@ -2,10 +2,10 @@ terraform {
   required_version = ">= 1.5.0"
 
   backend "s3" {
-    bucket         = "devops-lab-123456"
+    bucket         = "devops-lab-monitoring"
     key            = "terraform.tfstate"
     region         = "eu-west-1"
-    dynamodb_table = "devops-lab-locks-123456"
+    dynamodb_table = "devops-lab-locks-monitoring"
     encrypt        = true
   }
 

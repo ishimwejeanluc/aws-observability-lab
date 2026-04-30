@@ -23,13 +23,13 @@ resource "aws_iam_role_policy_attachment" "cwlogs" {
   policy_arn = "arn:aws:iam::aws:policy/CloudWatchLogsFullAccess"
 }
 
-resource "aws_iam_instance_profile" "ec2_cwlogs" {
+resource "aws_iam_instance_profile" "ec2_monitoring_cwlogs" {
   name = "${var.project_name}-ec2-cwlogs-profile"
   role = aws_iam_role.ec2_cwlogs.name
 }
 
 # Log group for Docker container logs
-resource "aws_cloudwatch_log_group" "app" {
+resource "aws_cloudwatch_log_group" "app-monitoring" {
   name              = var.log_group_name
   retention_in_days = var.retention_days
 }

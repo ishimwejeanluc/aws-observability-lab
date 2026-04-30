@@ -1,13 +1,13 @@
 variable "project_name" {
   description = "Project name used for resource naming"
   type        = string
-  default     = "webapp"
+  default     = "webapp-monitoring"
 }
 
 variable "log_group_name" {
   description = "CloudWatch Log Group name"
   type        = string
-  default     = "/docker/web-app"
+  default     = "/docker/web-app-monitoring"
 }
 
 variable "retention_days" {
